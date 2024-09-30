@@ -27,7 +27,6 @@ export class TaskListComponent implements OnInit {
     this.store.dispatch(removeTask({ taskId })); // Eliminar tarea
   }
   showTaskForm(task?: any): void {
-    console.log(task);
     this.selectedTask = task || null; // Si es una tarea seleccionada, cargarla; si no, es una nueva tarea
     this.displayTaskForm = true; // Muestra el diálogo
   }

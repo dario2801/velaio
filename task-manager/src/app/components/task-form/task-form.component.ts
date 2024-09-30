@@ -1,5 +1,17 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Store } from '@ngrx/store';
 import { addTask, updateTask } from 'src/app/states/task.actions';
@@ -31,14 +43,18 @@ export class TaskFormComponent implements OnInit {
   initForm() {
     this.taskForm = this.fb.group({
       name: ['', Validators.required],
-      dueDate: ['', [Validators.required, this.futureDateValidator]], // Validación personalizada para la fecha
+      dueDate: [
+        new Date().toISOString().split('T')[0],
+        [Validators.required, this.futureDateValidator],
+      ], // Asigna la fecha actual por defecto
       people: this.fb.array([]),
     });
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task'] && this.task) {
-      console.log(this.task);
-      this.isEditMode = !!this.task?.id; // Verificamos si la tarea tiene un ID para saber si es edición
+      const values = this.task.actionsObserver.value.task;
+      this.isEditMode = !!values.id; // Verificamos si la tarea tiene un ID para saber si es edición
       this.loadTaskData();
     }
   }
@@ -88,13 +104,13 @@ export class TaskFormComponent implements OnInit {
   loadTaskData(): void {
     // Limpiar el formulario antes de cargar la tarea
     this.people.clear();
-    console.log('task', this.task.actionsObserver.value.task);
     const values = this.task.actionsObserver.value.task;
     if (this.task) {
       // Establece los valores de la tarea en el formulario si existen
       this.taskForm.patchValue({
         name: values.name,
         dueDate: values.dueDate,
+        id: values.id,
       });
 
       // Verificar si en people existe y tiene datos
@@ -114,7 +130,6 @@ export class TaskFormComponent implements OnInit {
   generateUniqueId(): number {
     return Math.floor(Math.random() * 100000); // Genera un ID único
   }
-  
   // Enviar el formulario
   onSubmit(): void {
     if (
@@ -125,16 +140,23 @@ export class TaskFormComponent implements OnInit {
       const taskData = { ...this.taskForm.value };
 
       if (this.isEditMode) {
-        // Actualizar tarea
-        const updatedTask = { ...this.task, ...taskData }; // Mantener el ID de la tarea original
+        const updatedTask = {
+          ...this.task.actionsObserver.value.task,
+          ...taskData,
+          id: this.task.actionsObserver.value.task.id,
+        };
+        console.log(updatedTask);
         this.store.dispatch(updateTask({ task: updatedTask })); // Acción para actualizar
         this.messageService.add({
           severity: 'success',
           summary: 'Task Updated',
           detail: 'Your task has been successfully updated!',
         });
+        this.taskForm.reset();
       } else {
-        this.store.dispatch(addTask({ task: {...taskData,id:this.generateUniqueId()} })); // Acción para crear
+        this.store.dispatch(
+          addTask({ task: { ...taskData, id: this.generateUniqueId() } })
+        ); // Acción para crear
         this.messageService.add({
           severity: 'success',
           summary: 'Task Created',
@@ -159,5 +181,6 @@ export class TaskFormComponent implements OnInit {
         }
       });
     }
+    this.isEditMode = false;
   }
 }
