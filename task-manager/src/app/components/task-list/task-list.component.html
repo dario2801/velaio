@@ -1,0 +1,47 @@
+<div class="flex align-items-center justify-content-center w-full max-w-30rem h-full max-h-30rem mx-auto">
+  <img src="assets/images/Screenshot 2024-09-29 210834.png" alt="logo.png" class="w-full h-full mx-auto">
+</div>
+
+<button class="flex align-items-center justify-content-between my-3 gap-1 w-8rem" pButton label="Add Task"
+  (click)="showTaskForm()">
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF">
+    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+  </svg>
+</button>
+
+<p-table [value]="tasks$ | async" [paginator]="true" [rows]="5">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Task</th>
+      <th>Deadline</th>
+      <th>People</th>
+      <th>State</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-task>
+    <tr>
+      <td class="cursor-pointer" (click)="showTaskForm(tasks$)">{{ task.name }}</td>
+      <td>{{ task.dueDate | date }}</td>
+      <td class="cursor-pointer" (click)="showTaskForm(tasks$)">
+        <ul>
+          <li *ngFor="let person of task.people">
+            {{ person.name }} ({{ person.age }} años)
+          </li>
+        </ul>
+      </td>
+      <td>{{ task.completed ? 'Completada' : 'Pendiente' }}</td>
+      <td>
+        <button pButton label="Completar" (click)="onCompleteTask(task.id)" *ngIf="!task.completed"
+          class="w-10rem"></button>
+        <button pButton label="Eliminar" class="p-button-danger w-5rem ml-1" (click)="onRemoveTask(task.id)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- Diálogo modal para el formulario de tareas -->
+<p-dialog header="Add / Edit Task" [(visible)]="displayTaskForm" [modal]="true" [closable]="true"
+  [style]="{width: '50vw',minWidth:'360px'}">
+  <app-task-form [task]="selectedTask"></app-task-form>
+</p-dialog>

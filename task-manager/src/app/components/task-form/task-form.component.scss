@@ -1,0 +1,34 @@
+.input-invalid {
+  border: 1px solid red;
+}
+#container-person {
+  position: relative;
+  margin-top: 1.3rem;
+}
+#close-button {
+  width: 33px;
+  height: 33px;
+  border: 1px solid rgb(240, 136, 157);
+  background-color: rgb(245, 236, 236);
+  border-radius: 50%;
+  font-size: 18px;
+  color: crimson;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0px;
+  right: 0;
+  padding: 0;
+  margin: 0;
+}
+#delete {
+  top: -12px;
+  right: 0;
+  position: absolute;
+}
+p-chips {
+  width: 100% !important;
+  max-width: 100% !important;
+}
