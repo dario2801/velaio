@@ -1,27 +1,43 @@
-# TaskManager
+# Task Manager - Angular Project
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.8.
+Este proyecto es una aplicación de gestión de tareas simple utilizando **Angular**, **NgRx** para el manejo del estado, y **PrimeNG** como biblioteca de componentes UI. 
 
-## Development server
+## Estructura del Proyecto
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+El proyecto está estructurado de la siguiente manera:
 
-## Code scaffolding
+/src │ ├── /app │ ├── /components │ │ ├── /task-form # Componente de formulario para crear/editar tareas │ │ └── /task-list # Componente para listar las tareas │ │ │ ├── /states # NgRx state management (acciones, reducers, selectores) │ │ ├── task.actions.ts # Definición de acciones de NgRx para tareas │ │ ├── task.reducer.ts # Reducer que maneja el estado de las tareas │ │ └── task.selectors.ts # Selectores para obtener el estado de las tareas │ │ │ └── app.module.ts # Módulo principal de la aplicación │ ├── /assets # Recursos estáticos como imágenes y estilos ├── /environments # Archivos de configuración de entorno └── index.html # Punto de entrada de la aplicación
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Características
 
-## Build
+- **Crear tareas**: Un formulario que permite crear nuevas tareas.
+- **Editar tareas**: Las tareas existentes se pueden seleccionar y editar.
+- **Eliminar tareas**: Permite eliminar tareas.
+- **Completar tareas**: Marca las tareas como completadas.
+- **Manejo de estado con NgRx**: Utiliza NgRx para la gestión de estado global, asegurando que todas las tareas se gestionen de manera eficiente en la aplicación.
+- **Interfaz amigable**: Utiliza PrimeNG para proporcionar una interfaz moderna y fácil de usar.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Requisitos previos
 
-## Running unit tests
+Asegúrate de tener las siguientes herramientas instaladas en tu sistema:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- [Node.js](https://nodejs.org/) - Recomendado: versión LTS.
+- [Angular CLI](https://angular.io/cli) - Recomendado: versión 12 o superior.
+- Un editor de texto como [Visual Studio Code](https://code.visualstudio.com/).
 
-## Running end-to-end tests
+## Instalación y Configuración
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### 1. Clona el repositorio
 
-## Further help
+git clone https://github.com/dario2801/velaio
+cd task-manager
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Instalar dependencias
+npm install
+## Iniciar el servidor de desarrollo
+ng serve --open
+## Accede a la aplicación en tu navegador
+http://localhost:4200
+## Compilacion
+ng build --prod
+
