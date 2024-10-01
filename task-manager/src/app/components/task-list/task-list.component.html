@@ -22,9 +22,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-task>
       <tr>
-        <td class="cursor-pointer" (click)="showTaskForm(tasks$)">{{ task.name }}</td>
+        <td class="cursor-pointer" (click)="showTaskForm(task)">{{ task.name }}</td> <!-- Cambia tasks$ por task -->
         <td>{{ task.dueDate | date }}</td>
-        <td class="cursor-pointer" (click)="showTaskForm(tasks$)">
+        <td class="cursor-pointer" (click)="showTaskForm(task)"> <!-- Cambia tasks$ por task -->
           <ul>
             <li *ngFor="let person of task.people">
               {{ person.name }} ({{ person.age }} años)
@@ -33,17 +33,18 @@
         </td>
         <td>{{ task.completed ? 'Completada' : 'Pendiente' }}</td>
         <td>
-          <button pButton label="Completar" (click)="onCompleteTask(task.id)" *ngIf="!task.completed"
+          <button pButton label="Complete" (click)="onCompleteTask(task.id)" *ngIf="!task.completed"
             class="w-10rem"></button>
-          <button pButton label="Eliminar" class="p-button-danger w-5rem ml-1" (click)="onRemoveTask(task.id)"></button>
+          <button pButton label="Delete" class="p-button-danger w-5rem ml-1" (click)="onRemoveTask(task.id)"></button>
         </td>
       </tr>
     </ng-template>
   </p-table>
 
+
   <!-- Diálogo modal para el formulario de tareas -->
   <p-dialog header="Add / Edit Task" [(visible)]="displayTaskForm" [modal]="true" [closable]="true"
-    [style]="{width: '50vw',minWidth:'360px'}">
-    <app-task-form [task]="selectedTask"></app-task-form>
+    [style]="{width: '50vw',minWidth:'360px'}"  (onHide)="onDialogHide()">
+    <app-task-form #taskFormComponent [task]="selectedTask"></app-task-form>
   </p-dialog>
 </section>

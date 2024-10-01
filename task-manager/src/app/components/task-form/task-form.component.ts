@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -53,8 +54,9 @@ export class TaskFormComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task'] && this.task) {
-      const values = this.task.actionsObserver.value.task;
+      const values = this.task;
       this.isEditMode = !!values.id; // Verificamos si la tarea tiene un ID para saber si es edición
+      console.log(this.isEditMode);
       this.loadTaskData();
     }
   }
@@ -90,8 +92,13 @@ export class TaskFormComponent implements OnInit {
   futureDateValidator(control: AbstractControl) {
     const inputDate = new Date(control.value);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Ignorar la hora para comparar solo la fecha
-    return inputDate >= today ? null : { invalidDate: true };
+    today.setHours(0, 0, 0, 0);
+    inputDate.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    return inputDate >= yesterday ? null : { invalidDate: true };
   }
 
   // Validar si el nombre tiene caracteres especiales o números
@@ -104,13 +111,13 @@ export class TaskFormComponent implements OnInit {
   loadTaskData(): void {
     // Limpiar el formulario antes de cargar la tarea
     this.people.clear();
-    const values = this.task.actionsObserver.value.task;
-    if (this.task) {
+    const values = this.task;
+    console.log(values);
+    if (values) {
       // Establece los valores de la tarea en el formulario si existen
       this.taskForm.patchValue({
         name: values.name,
         dueDate: values.dueDate,
-        id: values.id,
       });
 
       // Verificar si en people existe y tiene datos
@@ -126,10 +133,6 @@ export class TaskFormComponent implements OnInit {
       }
     }
   }
-  // Generrar un id unico para cada tarea
-  generateUniqueId(): number {
-    return Math.floor(Math.random() * 100000); // Genera un ID único
-  }
   // Enviar el formulario
   onSubmit(): void {
     if (
@@ -141,22 +144,20 @@ export class TaskFormComponent implements OnInit {
 
       if (this.isEditMode) {
         const updatedTask = {
-          ...this.task.actionsObserver.value.task,
+          ...this.task,
           ...taskData,
-          id: this.task.actionsObserver.value.task.id,
+          // id: this.task.actionsObserver.value.task.id,
         };
-        console.log(updatedTask);
-        this.store.dispatch(updateTask({ task: updatedTask })); // Acción para actualizar
+        this.store.dispatch(updateTask({ task: updatedTask }));
         this.messageService.add({
           severity: 'success',
           summary: 'Task Updated',
           detail: 'Your task has been successfully updated!',
         });
         this.taskForm.reset();
+        this.isEditMode = false;
       } else {
-        this.store.dispatch(
-          addTask({ task: { ...taskData, id: this.generateUniqueId() } })
-        ); // Acción para crear
+        this.store.dispatch(addTask({ task: { ...taskData } })); // Acción para crear
         this.messageService.add({
           severity: 'success',
           summary: 'Task Created',
@@ -181,6 +182,10 @@ export class TaskFormComponent implements OnInit {
         }
       });
     }
-    this.isEditMode = false;
+  }
+  resetForm(): void {
+    console.log('Dialog closed');
+    this.taskForm.reset();
+    this.people.clear();
   }
 }
